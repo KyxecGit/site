@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Викторина</title>
+</head>
+<body>
+
+    <h1>Выберите викторину:</h1>
+    <form method="post" action="/">
+        <select name="quiz">
+            {% for id, name in q_list %}
+                <option value="{{id}}">{{name}}</option>
+            {% endfor %}
+        </select>
+        <p><input type="submit" value="Выбрать викторину"></p>
+    </form>
+
+</body>
+</html>
