@@ -1,4 +1,7 @@
-from flask import Flask
+import os
+from random import shuffle
+from flask import Flask , session, request , redirect, render_template, url_for
+from db import get_question_after, get_quises, check_answer
 
 def index():
     return '<h1>Стартовая страница</h1>'
@@ -9,8 +12,14 @@ def test():
 def result():
     return '<h1>Здесь будет результат</h1>'
 
-app = Flask(__name__)
-app.add_url_rule('/','index',index)
-app.add_url_rule('/test','test',test)
+folder = os.getcwd()
+
+app = Flask(__name__,template_folder=folder,static_folder=folder)
+
+app.add_url_rule('/','index',index, methods=['post','get'])
+app.add_url_rule('/test','test',test, methods=['post','get'])
 app.add_url_rule('/result','result',result)
+
+app.config['SECRET_KEY'] = 'QWERTYUIOPOIUYTREWERTYUIOOIU'
+
 app.run()
