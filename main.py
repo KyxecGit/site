@@ -20,9 +20,32 @@ def index():
     if request.method == 'GET':
         start_quiz(-1)
         return quiz_form()
+    else:
+        quest_id = request.form.get('quiz')
+        start_quiz(quest_id)
+        return redirect(url_for('test'))
+    
+
+def question_form(question):
+    answer_list = [
+        question[2], question[3], question[4], question[5]
+    ]
+    shuffle(answer_list)
+    return render_template('test.html',question=question[1], question_id= question[0], answer_list=answer_list)
 
 def test():
-    return '<h1>Здесь будет тест</h1>'
+    if not ('quiz' in session) or int(session['quiz']) < 0:
+        return redirect(url_for('index'))
+    else:
+        if request.method == 'POST':
+            #save_answer()
+            pass
+        next_question = get_question_after(session['last_question'], session['quiz'])
+        if next_question is None or len(next_question) == 0:
+            return redirect(url_for('result'))
+        else:
+            return question_form(next_question)
+    
 
 def result():
     return '<h1>Здесь будет результат</h1>'
