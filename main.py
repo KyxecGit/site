@@ -3,8 +3,23 @@ from random import shuffle
 from flask import Flask , session, request , redirect, render_template, url_for
 from db import get_question_after, get_quises, check_answer
 
+def start_quiz(quiz_id):
+    session['quiz'] = quiz_id
+    session['last_question'] = 0
+    session['answer'] = 0
+    session['total'] = 0
+
+def end_quiz():
+    session.clear()
+
+def quiz_form():
+    q_list = get_quises()
+    return render_template('index.html', q_list = q_list)
+
 def index():
-    return '<h1>Стартовая страница</h1>'
+    if request.method == 'GET':
+        start_quiz(-1)
+        return quiz_form()
 
 def test():
     return '<h1>Здесь будет тест</h1>'
