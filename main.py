@@ -30,15 +30,20 @@ def question_form(question):
    shuffle(answers_list)
    return render_template('test.html',question=question[1],quest_id=question[0],answers_list=answers_list)
 
-
+def save_answers():
+   answer = request.form.get('ans_text')
+   quest_id = request.form.get('q_id')
+   session['last_question'] = quest_id
+   session['total'] += 1
+   if check_answer(quest_id, answer):
+      session['answers'] += 1
 
 def test():
    if not ('quiz' in session) or int(session['quiz']) < 0:
       return redirect(url_for('index'))
    else:
       if request.method == 'POST':
-         pass
-         #save_answers()
+         save_answers()
       next_question = get_question_after(session['last_question'], session['quiz'])
       if next_question is None or len(next_question) == 0:
          return redirect(url_for('result'))
@@ -46,12 +51,10 @@ def test():
          return question_form(next_question)
 
 
-
-
-
-
 def result():
-   return "that's all folks!"
+   html = render_template('result.html', right=session['answers'], total=session['total'])
+   end_quiz()
+   return html
 
 folder = os.getcwd()
 # Создаём объект веб-приложения:
